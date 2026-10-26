@@ -1,0 +1,6 @@
+{
+  "name": "Turn the Lamp On — Interactive Rive Showcase",
+  "description": "A minimal, late-night showcase website for an interactive Rive animation scene by Victor Johnmark.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
