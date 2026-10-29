@@ -142,19 +142,24 @@ export default function DeskLampPage() {
         src: '/desk-lamp.riv',
         canvas: canvas,
         autoplay: true,
-        stateMachines: ['main', 'State Machine 1'],
+        stateMachine: 'main',
         layout: new Layout({
           fit: Fit.Contain,
           alignment: Alignment.Center,
         }),
         onLoad: () => {
+          console.log('DESK LAMP LOADED!');
+          console.log('DESK LAMP AB:', riveInstance?.artboard?.name);
+          console.log('DESK LAMP SM:', riveInstance?.stateMachineNames);
+          console.log('DESK LAMP ANIM:', riveInstance?.animationNames);
           if (riveInstance) {
             riveInstance.resizeDrawingSurfaceToCanvas();
           }
           setIsLoaded(true);
           setHasError(false);
         },
-        onLoadError: () => {
+        onLoadError: (err) => {
+          console.error('DESK LAMP LOAD ERROR:', err);
           setHasError(true);
         },
       });
