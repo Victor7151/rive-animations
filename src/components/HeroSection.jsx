@@ -1,39 +1,57 @@
-import React, { useState, useEffect } from 'react';
-import { useRive, Layout, Fit, Alignment } from '@rive-app/react-canvas';
+import React, { useState, useEffect, useRef } from 'react';
+import { Rive, Layout, Fit, Alignment } from '@rive-app/canvas';
 
 export default function HeroSection() {
+  const canvasRef = useRef(null);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Initialize Rive with both standard state machine names as fallback
-  const { rive, RiveComponent } = useRive({
-    src: '/wardrobe.riv',
-    stateMachines: ['State Machine 1', 'main'],
-    autoplay: true,
-    layout: new Layout({
-      fit: Fit.Contain,
-      alignment: Alignment.Center,
-    }),
-    isTouchScrollEnabled: true,
-    onLoad: () => {
-      setIsLoaded(true);
-    },
-    onLoadError: () => {
-      // Graceful fallback: stay on loading placeholder, never show error screen
-      setIsLoaded(false);
-    },
-  });
-
-  // Verify if rive instance is ready and ensure the state machine is running
   useEffect(() => {
-    if (rive) {
-      setIsLoaded(true);
-      const smNames = rive.stateMachineNames;
-      if (smNames && smNames.length > 0 && (!rive.playingStateMachineNames || rive.playingStateMachineNames.length === 0)) {
-        rive.play(smNames[0]);
-      }
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let riveInstance = null;
+
+    try {
+      riveInstance = new Rive({
+        src: '/wardrobe.riv',
+        canvas: canvas,
+        artboard: 'main',
+        stateMachine: 'main',
+        autoplay: true,
+        layout: new Layout({
+          fit: Fit.Contain,
+          alignment: Alignment.Center,
+        }),
+        onLoad: () => {
+          if (riveInstance) {
+            riveInstance.resizeDrawingSurfaceToCanvas();
+          }
+          setIsLoaded(true);
+        },
+        onLoadError: () => {
+          setIsLoaded(false);
+        },
+      });
+
+      const handleResize = () => {
+        if (riveInstance) {
+          riveInstance.resizeDrawingSurfaceToCanvas();
+        }
+      };
+
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        if (riveInstance) {
+          riveInstance.cleanup();
+        }
+      };
+    } catch {
+      setIsLoaded(false);
     }
-  }, [rive]);
+  }, []);
 
   const handlePointerDown = () => {
     if (!hasInteracted) {
@@ -86,7 +104,10 @@ export default function HeroSection() {
 
             {/* Rive canvas rendering container */}
             <div className={`wardrobe-canvas-box ${isLoaded ? 'is-ready' : 'is-loading'}`}>
-              <RiveComponent
+              <canvas
+                ref={canvasRef}
+                width={2752}
+                height={1536}
                 className="wardrobe-canvas"
                 style={{ touchAction: 'pan-y' }}
               />
