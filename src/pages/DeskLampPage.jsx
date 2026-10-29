@@ -706,11 +706,10 @@ export default function DeskLampPage() {
                 {/* Sound Toggle */}
                 <button
                   onClick={() => setSoundEnabled((prev) => !prev)}
-                  className={`p-3 rounded-full border transition-all text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F2A33A] ${
-                    soundEnabled
+                  className={`p-3 rounded-full border transition-all text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#F2A33A] ${soundEnabled
                       ? 'border-[#F2A33A]/30 text-[#F2A33A] bg-[#F2A33A]/10'
                       : 'border-[rgba(243,230,214,0.08)] text-[#9AA5B1] hover:text-[#F3E6D6]'
-                  }`}
+                    }`}
                   aria-label={soundEnabled ? 'Disable completion chime' : 'Enable completion chime'}
                   title={soundEnabled ? 'Chime sound is enabled' : 'Chime sound is muted'}
                 >
@@ -876,9 +875,8 @@ export default function DeskLampPage() {
                       >
                         <span>{item.question}</span>
                         <ChevronDown
-                          className={`w-5 h-5 shrink-0 text-[#F2A33A] transition-transform duration-200 ${
-                            isOpen ? 'rotate-180' : ''
-                          }`}
+                          className={`w-5 h-5 shrink-0 text-[#F2A33A] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''
+                            }`}
                           aria-hidden="true"
                         />
                       </button>
