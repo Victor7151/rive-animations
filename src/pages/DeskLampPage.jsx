@@ -21,20 +21,9 @@ import {
   VolumeX,
 } from 'lucide-react';
 
-interface BookItem {
-  id: string;
-  title: string;
-  author: string;
-  year: string;
-  description: string;
-  mood: string;
-  coverBg: string;
-  spineBg: string;
-  accentColor: string;
-  textColor: string;
-}
+/* BookItem shape: id, title, author, year, description, mood, coverBg, spineBg, accentColor, textColor */
 
-const CLASSIC_BOOKS: BookItem[] = [
+const CLASSIC_BOOKS = [
   {
     id: 'pride-and-prejudice',
     title: 'Pride and Prejudice',
@@ -109,12 +98,9 @@ const CLASSIC_BOOKS: BookItem[] = [
   },
 ];
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
+/* FAQItem shape: question, answer */
 
-const FAQ_ITEMS: FAQItem[] = [
+const FAQ_ITEMS = [
   {
     question: 'What is the best time to read?',
     answer:
@@ -137,11 +123,11 @@ const FAQ_ITEMS: FAQItem[] = [
   },
 ];
 
-export default function App() {
+export default function DeskLampPage() {
   // ==========================================
   // RIVE ANIMATION CODE (KEPT EXACTLY AS IT IS)
   // ==========================================
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -149,14 +135,14 @@ export default function App() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    let riveInstance: Rive | null = null;
+    let riveInstance = null;
 
     try {
       riveInstance = new Rive({
-        src: 'desk-lamp.riv',
+        src: '/desk-lamp.riv',
         canvas: canvas,
         autoplay: true,
-        stateMachines: 'main',
+        stateMachines: ['main', 'State Machine 1'],
         layout: new Layout({
           fit: Fit.Contain,
           alignment: Alignment.Center,
@@ -210,7 +196,7 @@ export default function App() {
     try {
       const AudioCtx =
         window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        window.webkitAudioContext;
       if (!AudioCtx) return;
       const ctx = new AudioCtx();
       const now = ctx.currentTime;
@@ -246,7 +232,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    let interval: ReturnType<typeof setInterval> | null = null;
+    let interval = null;
 
     if (isTimerRunning && timerSeconds > 0) {
       interval = setInterval(() => {
@@ -294,8 +280,8 @@ export default function App() {
   // ==========================================
   // FAQ ACCORDION STATE
   // ==========================================
-  const [openFAQIndex, setOpenFAQIndex] = useState<number | null>(0);
-  const toggleFAQ = (index: number) => {
+  const [openFAQIndex, setOpenFAQIndex] = useState(0);
+  const toggleFAQ = (index) => {
     setOpenFAQIndex((current) => (current === index ? null : index));
   };
 
@@ -306,7 +292,7 @@ export default function App() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const newsletterInputId = useId();
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = (e) => {
     e.preventDefault();
     if (emailInput.trim()) {
       setIsSubscribed(true);
